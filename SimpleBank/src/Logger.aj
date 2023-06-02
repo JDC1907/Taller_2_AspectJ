@@ -1,13 +1,8 @@
-import java.io.File;
-import java.util.Calendar;
-import com.bank.*;
-import java.io.File;
 import java.util.Calendar;
 import com.bank.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.*;
 
 
 public aspect Logger {
@@ -16,7 +11,7 @@ public aspect Logger {
 	 pointcut transaction() : call(* Bank.moneyMakeTransaction (..) );
 	 after() : transaction() {
 		 try {
-			 FileWriter writer = new FileWriter("Logg.txt", true);
+			 FileWriter writer = new FileWriter("Log.txt", true);
 		     BufferedWriter bf = new BufferedWriter(writer);
 		     bf.write("Transacción exitosa a las: "+cal.get(Calendar.HOUR_OF_DAY)+"H"+":"+cal.get(Calendar.MINUTE)+"m");
 		     bf.newLine();
@@ -27,6 +22,20 @@ public aspect Logger {
 
 		 }
 	 
+	 pointcut retiro() : call(* Bank.moneyWithdrawal (..) );
+	 after() : retiro(){
+		 try {
+			 FileWriter writer = new FileWriter("Log.txt", true);
+		     BufferedWriter bf = new BufferedWriter(writer);
+		     bf.write("Retiro de dinero exitoso, a las: "+cal.get(Calendar.HOUR_OF_DAY)+"H"+":"+cal.get(Calendar.MINUTE)+"m");
+		     bf.newLine();
+		     bf.flush();
+		     bf.close();
+		 }catch (IOException e) {
+	         e.printStackTrace();
+		 } System.out.println("Retiro de dinero exitoso, a las: "+cal.get(Calendar.HOUR_OF_DAY)+"H"+":"+cal.get(Calendar.MINUTE)+"m");
+
 	 
+}
 	 
 }
